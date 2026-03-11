@@ -1,5 +1,6 @@
 export const translations = {
   it: {
+    // ── Welcome ──────────────────────────────────────────
     appSubtitle: 'Inserisci i tuoi dati per iniziare',
     name: 'Nome',
     namePlaceholder: 'Come ti chiami?',
@@ -14,7 +15,7 @@ export const translations = {
     heightError: 'Altezza non valida (50-250 cm)',
     weight: 'Peso (kg)',
     weightError: 'Peso non valido (20-300 kg)',
-    activity: 'Attivita\' fisica settimanale',
+    activity: "Attivita' fisica settimanale",
     activityError: "Seleziona il livello d'attivita'",
     activityLevels: [
       { key: 'sedentary',   label: 'Sedentario', description: '< 1 volta/sett.' },
@@ -30,8 +31,62 @@ export const translations = {
     tdeeHint: 'Calcolato con la formula Mifflin-St Jeor. Puoi usare questo valore o inserirne uno personalizzato.',
     tdeeUse: 'Usa questo valore',
     submit: 'Inizia',
+
+    // ── Navigation ───────────────────────────────────────
+    tabDashboard: 'Home',
+    tabRecipes: 'Ricette',
+    tabPlan: 'Piano',
+
+    // ── Dashboard ────────────────────────────────────────
+    greeting: (name) => `Ciao, ${name} 👋`,
+    greetingSubtitle: 'Ecco il riepilogo di oggi',
+    dailyTarget: 'TARGET GIORNALIERO',
+    statWeight: 'PESO',
+    statAge: "ETA'",
+    statUnitYears: 'anni',
+    thisWeek: 'Questa settimana',
+    daysShort: ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'],
+    noMealsTitle: 'Nessun pasto pianificato',
+    noMealsDesc: 'Vai su "Piano" per organizzare i tuoi pasti settimanali',
+
+    // ── Recipes ──────────────────────────────────────────
+    recipesTitle: 'Ricette',
+    recipesSaved: (n) => `${n} ricette salvate`,
+    recipesSearchPlaceholder: 'Cerca ricetta...',
+    categories: ['Tutte', 'Colazione', 'Pranzo', 'Cena', 'Snack'],
+    noRecipesFound: 'Nessuna ricetta trovata',
+    newRecipe: 'Nuova ricetta',
+    recipeNameLabel: 'Nome ricetta',
+    recipeNamePlaceholder: 'Es. Pasta al pomodoro',
+    recipeNameError: 'Inserisci il nome della ricetta',
+    categoriesLabel: 'Categorie — seleziona anche piu\' di una',
+    categoriesError: 'Seleziona almeno una categoria',
+    ingredientsSection: 'Ingredienti',
+    searchFoodLabel: 'Cerca alimento',
+    searchFoodPlaceholder: 'Es. pasta, pollo, avena...',
+    sourceBadge: 'Dati da Open Food Facts',
+    noFoodFound: 'Nessun alimento trovato. Prova un termine diverso.',
+    networkError: 'Errore di connessione. Controlla la rete.',
+    quantityLabel: "Quantita'",
+    addIngredient: 'Aggiungi ingrediente',
+    ingredientsAdded: (n) => `Ingredienti aggiunti (${n})`,
+    ingredientsError: 'Aggiungi almeno un ingrediente',
+    totalRecipe: 'Totale ricetta',
+    macroCalories: 'Calorie',
+    macroProtein: 'Proteine',
+    macroCarbs: 'Carboidrati',
+    macroFat: 'Grassi',
+    saveRecipe: 'Salva ricetta',
+
+    // ── Plan ─────────────────────────────────────────────
+    planTitle: 'Piano settimanale',
+    days: ['Lunedi\'', 'Martedi\'', 'Mercoledi\'', 'Giovedi\'', 'Venerdi\'', 'Sabato', 'Domenica'],
+    meals: ['Colazione', 'Pranzo', 'Cena', 'Snack'],
+    mealEmpty: 'Nessun alimento aggiunto',
   },
+
   en: {
+    // ── Welcome ──────────────────────────────────────────
     appSubtitle: 'Enter your details to get started',
     name: 'Name',
     namePlaceholder: 'What is your name?',
@@ -62,5 +117,57 @@ export const translations = {
     tdeeHint: 'Calculated using the Mifflin-St Jeor formula. You can use this value or enter a custom one.',
     tdeeUse: 'Use this value',
     submit: 'Get started',
+
+    // ── Navigation ───────────────────────────────────────
+    tabDashboard: 'Home',
+    tabRecipes: 'Recipes',
+    tabPlan: 'Plan',
+
+    // ── Dashboard ────────────────────────────────────────
+    greeting: (name) => `Hello, ${name} 👋`,
+    greetingSubtitle: "Here's today's summary",
+    dailyTarget: 'DAILY TARGET',
+    statWeight: 'WEIGHT',
+    statAge: 'AGE',
+    statUnitYears: 'years',
+    thisWeek: 'This week',
+    daysShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    noMealsTitle: 'No meals planned',
+    noMealsDesc: 'Go to "Plan" to organize your weekly meals',
+
+    // ── Recipes ──────────────────────────────────────────
+    recipesTitle: 'Recipes',
+    recipesSaved: (n) => `${n} recipes saved`,
+    recipesSearchPlaceholder: 'Search recipe...',
+    categories: ['All', 'Breakfast', 'Lunch', 'Dinner', 'Snack'],
+    noRecipesFound: 'No recipes found',
+    newRecipe: 'New recipe',
+    recipeNameLabel: 'Recipe name',
+    recipeNamePlaceholder: 'E.g. Grilled chicken',
+    recipeNameError: 'Enter the recipe name',
+    categoriesLabel: 'Categories — select one or more',
+    categoriesError: 'Select at least one category',
+    ingredientsSection: 'Ingredients',
+    searchFoodLabel: 'Search food',
+    searchFoodPlaceholder: 'E.g. pasta, chicken, oats...',
+    sourceBadge: 'Data from Open Food Facts',
+    noFoodFound: 'No food found. Try a different term.',
+    networkError: 'Connection error. Check your network.',
+    quantityLabel: 'Quantity',
+    addIngredient: 'Add ingredient',
+    ingredientsAdded: (n) => `Added ingredients (${n})`,
+    ingredientsError: 'Add at least one ingredient',
+    totalRecipe: 'Recipe total',
+    macroCalories: 'Calories',
+    macroProtein: 'Proteins',
+    macroCarbs: 'Carbs',
+    macroFat: 'Fats',
+    saveRecipe: 'Save recipe',
+
+    // ── Plan ─────────────────────────────────────────────
+    planTitle: 'Weekly plan',
+    days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    meals: ['Breakfast', 'Lunch', 'Dinner', 'Snack'],
+    mealEmpty: 'No food added',
   },
 };
