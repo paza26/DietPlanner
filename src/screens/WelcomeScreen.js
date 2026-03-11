@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { translations } from '../i18n/translations';
+import { THEME } from '../theme';
 
 const ACTIVITY_MULTIPLIERS = {
   sedentary: 1.2,
@@ -32,19 +33,6 @@ function calcTDEE({ weight, height, age, sex, activity }) {
   return multiplier ? Math.round(bmr * multiplier) : null;
 }
 
-const THEME = {
-  bg: '#F0F4F8',
-  card: '#FFFFFF',
-  primary: '#0f172a',
-  accent: '#10b981',
-  accentLight: '#d1fae5',
-  accentMid: '#6ee7b7',
-  text: '#0f172a',
-  textSecondary: '#64748b',
-  border: '#e2e8f0',
-  error: '#ef4444',
-  inputBg: '#f8fafc',
-};
 
 export default function WelcomeScreen({ onComplete }) {
   const [lang, setLang]         = useState('it');
