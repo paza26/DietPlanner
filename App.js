@@ -1,11 +1,18 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import WelcomeScreen from './src/screens/WelcomeScreen';
 
 export default function App() {
+  const [user, setUser] = useState(null);
+
+  if (!user) {
+    return <WelcomeScreen onComplete={setUser} />;
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>DietPlanner</Text>
-      <StatusBar style="auto" />
+      <Text style={styles.greeting}>Ciao, {user.name}!</Text>
+      <Text style={styles.info}>Target: {user.calories} kcal/giorno</Text>
     </View>
   );
 }
@@ -13,12 +20,18 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f9f9f9',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  greeting: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#1a1a2e',
+  },
+  info: {
+    fontSize: 16,
+    color: '#666',
+    marginTop: 8,
   },
 });
