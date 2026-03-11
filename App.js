@@ -1,37 +1,28 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { LangContext } from './src/i18n/LangContext';
 import WelcomeScreen from './src/screens/WelcomeScreen';
+import MainNavigator from './src/navigation/MainNavigator';
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [lang, setLang] = useState('it');
 
-  if (!user) {
-    return <WelcomeScreen onComplete={setUser} />;
+  function handleComplete(data) {
+    setLang(data.lang);
+    setUser(data);
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.greeting}>Ciao, {user.name}!</Text>
-      <Text style={styles.info}>Target: {user.calories} kcal/giorno</Text>
-    </View>
+    <SafeAreaProvider>
+      <LangContext.Provider value={lang}>
+        <NavigationContainer>
+          {user
+            ? <MainNavigator user={user} />
+            : <WelcomeScreen onComplete={handleComplete} />}
+        </NavigationContainer>
+      </LangContext.Provider>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9f9f9',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  greeting: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#1a1a2e',
-  },
-  info: {
-    fontSize: 16,
-    color: '#666',
-    marginTop: 8,
-  },
-});
