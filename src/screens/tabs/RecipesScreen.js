@@ -12,9 +12,252 @@ import { loadRecipes, saveRecipes } from '../../services/storage';
 
 const DEFAULT_RECIPES = [
   {
-    id: '1', name: 'Avena con frutta', categories: ['Colazione'],
-    ingredients: [{ name: 'Fiocchi d\'avena', grams: 80, nutrition: { calories: 302, protein: 10.7, carbs: 52, fat: 5.5 } }],
-    nutrition: { calories: 302, protein: 10.7, carbs: 52, fat: 5.5 },
+    id: 'd1', name: 'Pasta al pomodoro', categories: ['Pranzo', 'Cena'],
+    ingredients: [
+      { name: 'Pasta secca', grams: 80, nutrition: { calories: 280, protein: 10.4, carbs: 56, fat: 1.6 } },
+      { name: 'Salsa di pomodoro', grams: 150, nutrition: { calories: 45, protein: 1.5, carbs: 9, fat: 0.6 } },
+    ],
+    nutrition: { calories: 325, protein: 11.9, carbs: 65, fat: 2.2 },
+  },
+  {
+    id: 'd2', name: 'Pasta al pesto', categories: ['Pranzo'],
+    ingredients: [
+      { name: 'Pasta secca', grams: 80, nutrition: { calories: 280, protein: 10.4, carbs: 56, fat: 1.6 } },
+      { name: 'Pesto genovese', grams: 30, nutrition: { calories: 156, protein: 3, carbs: 3, fat: 15 } },
+    ],
+    nutrition: { calories: 436, protein: 13.4, carbs: 59, fat: 16.6 },
+  },
+  {
+    id: 'd3', name: 'Pasta con tonno', categories: ['Pranzo', 'Cena'],
+    ingredients: [
+      { name: 'Pasta secca', grams: 80, nutrition: { calories: 280, protein: 10.4, carbs: 56, fat: 1.6 } },
+      { name: 'Tonno in scatola', grams: 120, nutrition: { calories: 139, protein: 31.2, carbs: 0, fat: 1.2 } },
+    ],
+    nutrition: { calories: 419, protein: 41.6, carbs: 56, fat: 2.8 },
+  },
+  {
+    id: 'd4', name: 'Risotto ai funghi', categories: ['Pranzo', 'Cena'],
+    ingredients: [
+      { name: 'Riso arborio', grams: 90, nutrition: { calories: 315, protein: 6.3, carbs: 69, fat: 0.9 } },
+      { name: 'Funghi misti', grams: 200, nutrition: { calories: 44, protein: 4, carbs: 6, fat: 0.4 } },
+      { name: 'Parmigiano', grams: 20, nutrition: { calories: 83, protein: 7.5, carbs: 0, fat: 5.7 } },
+    ],
+    nutrition: { calories: 442, protein: 17.8, carbs: 75, fat: 7 },
+  },
+  {
+    id: 'd5', name: 'Riso con pollo e verdure', categories: ['Pranzo', 'Cena'],
+    ingredients: [
+      { name: 'Riso cotto', grams: 200, nutrition: { calories: 260, protein: 5.4, carbs: 56, fat: 0.6 } },
+      { name: 'Petto di pollo', grams: 150, nutrition: { calories: 248, protein: 46.5, carbs: 0, fat: 5.4 } },
+    ],
+    nutrition: { calories: 508, protein: 51.9, carbs: 56, fat: 6 },
+  },
+  {
+    id: 'd6', name: 'Insalata di farro con pollo', categories: ['Pranzo'],
+    ingredients: [
+      { name: 'Farro cotto', grams: 200, nutrition: { calories: 298, protein: 10.4, carbs: 62.4, fat: 1.2 } },
+      { name: 'Petto di pollo', grams: 150, nutrition: { calories: 248, protein: 46.5, carbs: 0, fat: 5.4 } },
+    ],
+    nutrition: { calories: 546, protein: 56.9, carbs: 62.4, fat: 6.6 },
+  },
+  {
+    id: 'd7', name: 'Riso integrale con verdure grigliate', categories: ['Pranzo'],
+    ingredients: [
+      { name: 'Riso integrale cotto', grams: 200, nutrition: { calories: 218, protein: 4.6, carbs: 45.6, fat: 1.6 } },
+      { name: 'Verdure grigliate', grams: 250, nutrition: { calories: 75, protein: 3.75, carbs: 15, fat: 0.5 } },
+    ],
+    nutrition: { calories: 293, protein: 8.4, carbs: 60.6, fat: 2.1 },
+  },
+  {
+    id: 'd8', name: 'Minestrone di verdure', categories: ['Pranzo', 'Cena'],
+    ingredients: [
+      { name: 'Verdure miste', grams: 400, nutrition: { calories: 120, protein: 6, carbs: 24, fat: 0.8 } },
+      { name: 'Pasta corta', grams: 60, nutrition: { calories: 210, protein: 7.8, carbs: 42, fat: 1.2 } },
+    ],
+    nutrition: { calories: 330, protein: 13.8, carbs: 66, fat: 2 },
+  },
+  {
+    id: 'd9', name: 'Zuppa di lenticchie', categories: ['Pranzo', 'Cena'],
+    ingredients: [
+      { name: 'Lenticchie cotte', grams: 300, nutrition: { calories: 348, protein: 27, carbs: 60, fat: 1.2 } },
+      { name: 'Carote e sedano', grams: 150, nutrition: { calories: 45, protein: 1, carbs: 10, fat: 0.2 } },
+    ],
+    nutrition: { calories: 393, protein: 28, carbs: 70, fat: 1.4 },
+  },
+  {
+    id: 'd10', name: 'Buddha bowl di ceci', categories: ['Pranzo'],
+    ingredients: [
+      { name: 'Ceci cotti', grams: 200, nutrition: { calories: 328, protein: 17.8, carbs: 54, fat: 5.2 } },
+      { name: 'Quinoa cotta', grams: 150, nutrition: { calories: 180, protein: 6.6, carbs: 31.5, fat: 2.85 } },
+      { name: 'Verdure miste', grams: 100, nutrition: { calories: 30, protein: 1.5, carbs: 6, fat: 0.2 } },
+    ],
+    nutrition: { calories: 538, protein: 25.9, carbs: 91.5, fat: 8.25 },
+  },
+  {
+    id: 'd11', name: 'Insalata di pollo e avocado', categories: ['Pranzo'],
+    ingredients: [
+      { name: 'Petto di pollo', grams: 150, nutrition: { calories: 248, protein: 46.5, carbs: 0, fat: 5.4 } },
+      { name: 'Avocado', grams: 100, nutrition: { calories: 160, protein: 2, carbs: 9, fat: 15 } },
+      { name: 'Insalata mista', grams: 100, nutrition: { calories: 20, protein: 1, carbs: 3, fat: 0.2 } },
+    ],
+    nutrition: { calories: 428, protein: 49.5, carbs: 12, fat: 20.6 },
+  },
+  {
+    id: 'd12', name: 'Insalata greca', categories: ['Pranzo'],
+    ingredients: [
+      { name: 'Feta', grams: 80, nutrition: { calories: 212, protein: 11.2, carbs: 1.2, fat: 17.6 } },
+      { name: 'Pomodori e cetrioli', grams: 250, nutrition: { calories: 50, protein: 2, carbs: 10, fat: 0.4 } },
+      { name: 'Olive nere', grams: 50, nutrition: { calories: 72, protein: 0.5, carbs: 1.5, fat: 7 } },
+    ],
+    nutrition: { calories: 334, protein: 13.7, carbs: 12.7, fat: 25 },
+  },
+  {
+    id: 'd13', name: 'Wrap di tonno e verdure', categories: ['Pranzo'],
+    ingredients: [
+      { name: 'Piadina', grams: 80, nutrition: { calories: 260, protein: 8, carbs: 46, fat: 6 } },
+      { name: 'Tonno in scatola', grams: 150, nutrition: { calories: 174, protein: 39, carbs: 0, fat: 1.5 } },
+      { name: 'Verdure', grams: 100, nutrition: { calories: 25, protein: 1, carbs: 5, fat: 0.1 } },
+    ],
+    nutrition: { calories: 459, protein: 48, carbs: 51, fat: 7.6 },
+  },
+  {
+    id: 'd14', name: 'Piadina con bresaola e rucola', categories: ['Pranzo'],
+    ingredients: [
+      { name: 'Piadina', grams: 100, nutrition: { calories: 325, protein: 10, carbs: 57.5, fat: 7.5 } },
+      { name: 'Bresaola', grams: 80, nutrition: { calories: 121, protein: 25.6, carbs: 0, fat: 1.6 } },
+      { name: 'Rucola', grams: 30, nutrition: { calories: 8, protein: 0.75, carbs: 1.05, fat: 0.15 } },
+    ],
+    nutrition: { calories: 454, protein: 36.35, carbs: 58.55, fat: 9.25 },
+  },
+  {
+    id: 'd15', name: 'Frittata di verdure', categories: ['Pranzo', 'Cena'],
+    ingredients: [
+      { name: 'Uova', grams: 180, nutrition: { calories: 279, protein: 23.4, carbs: 1.8, fat: 19.8 } },
+      { name: 'Zucchine', grams: 150, nutrition: { calories: 24, protein: 1.8, carbs: 3.6, fat: 0.3 } },
+    ],
+    nutrition: { calories: 303, protein: 25.2, carbs: 5.4, fat: 20.1 },
+  },
+  {
+    id: 'd16', name: 'Petto di pollo alla griglia con patate', categories: ['Cena'],
+    ingredients: [
+      { name: 'Petto di pollo', grams: 200, nutrition: { calories: 330, protein: 62, carbs: 0, fat: 7.2 } },
+      { name: 'Patate', grams: 250, nutrition: { calories: 193, protein: 5, carbs: 42.5, fat: 0.25 } },
+    ],
+    nutrition: { calories: 523, protein: 67, carbs: 42.5, fat: 7.45 },
+  },
+  {
+    id: 'd17', name: 'Salmone al forno con broccoli', categories: ['Cena'],
+    ingredients: [
+      { name: 'Salmone', grams: 180, nutrition: { calories: 374, protein: 36, carbs: 0, fat: 23.4 } },
+      { name: 'Broccoli', grams: 200, nutrition: { calories: 68, protein: 5.6, carbs: 10, fat: 0.6 } },
+    ],
+    nutrition: { calories: 442, protein: 41.6, carbs: 10, fat: 24 },
+  },
+  {
+    id: 'd18', name: 'Bistecca con insalata', categories: ['Cena'],
+    ingredients: [
+      { name: 'Manzo magro', grams: 200, nutrition: { calories: 400, protein: 52, carbs: 0, fat: 20 } },
+      { name: 'Rucola e pomodori', grams: 150, nutrition: { calories: 35, protein: 2, carbs: 5, fat: 0.3 } },
+    ],
+    nutrition: { calories: 435, protein: 54, carbs: 5, fat: 20.3 },
+  },
+  {
+    id: 'd19', name: 'Merluzzo al forno con pomodorini', categories: ['Cena'],
+    ingredients: [
+      { name: 'Merluzzo', grams: 250, nutrition: { calories: 205, protein: 45, carbs: 0, fat: 1.75 } },
+      { name: 'Pomodorini', grams: 200, nutrition: { calories: 36, protein: 1.6, carbs: 7.2, fat: 0.4 } },
+    ],
+    nutrition: { calories: 241, protein: 46.6, carbs: 7.2, fat: 2.15 },
+  },
+  {
+    id: 'd20', name: 'Gamberi saltati con verdure', categories: ['Cena'],
+    ingredients: [
+      { name: 'Gamberi', grams: 250, nutrition: { calories: 213, protein: 45, carbs: 2.25, fat: 2.5 } },
+      { name: 'Verdure miste', grams: 200, nutrition: { calories: 60, protein: 3, carbs: 12, fat: 0.4 } },
+    ],
+    nutrition: { calories: 273, protein: 48, carbs: 14.25, fat: 2.9 },
+  },
+  {
+    id: 'd21', name: 'Pollo al curry con riso basmati', categories: ['Cena'],
+    ingredients: [
+      { name: 'Petto di pollo', grams: 180, nutrition: { calories: 297, protein: 55.8, carbs: 0, fat: 6.5 } },
+      { name: 'Riso basmati cotto', grams: 180, nutrition: { calories: 234, protein: 4.9, carbs: 50.4, fat: 0.5 } },
+    ],
+    nutrition: { calories: 531, protein: 60.7, carbs: 50.4, fat: 7 },
+  },
+  {
+    id: 'd22', name: 'Tagliata di manzo con rucola', categories: ['Cena'],
+    ingredients: [
+      { name: 'Manzo', grams: 200, nutrition: { calories: 400, protein: 52, carbs: 0, fat: 20 } },
+      { name: 'Rucola', grams: 80, nutrition: { calories: 20, protein: 2, carbs: 2.8, fat: 0.4 } },
+      { name: 'Parmigiano', grams: 15, nutrition: { calories: 62, protein: 5.6, carbs: 0, fat: 4.3 } },
+    ],
+    nutrition: { calories: 482, protein: 59.6, carbs: 2.8, fat: 24.7 },
+  },
+  {
+    id: 'd23', name: 'Orata al forno con patate', categories: ['Cena'],
+    ingredients: [
+      { name: 'Orata', grams: 250, nutrition: { calories: 240, protein: 50, carbs: 0, fat: 3.75 } },
+      { name: 'Patate', grams: 200, nutrition: { calories: 154, protein: 4, carbs: 34, fat: 0.2 } },
+    ],
+    nutrition: { calories: 394, protein: 54, carbs: 34, fat: 3.95 },
+  },
+  {
+    id: 'd24', name: 'Polpette di manzo con zucchine', categories: ['Cena'],
+    ingredients: [
+      { name: 'Manzo macinato', grams: 200, nutrition: { calories: 400, protein: 52, carbs: 0, fat: 20 } },
+      { name: 'Zucchine', grams: 200, nutrition: { calories: 32, protein: 2.4, carbs: 4.8, fat: 0.4 } },
+    ],
+    nutrition: { calories: 432, protein: 54.4, carbs: 4.8, fat: 20.4 },
+  },
+  {
+    id: 'd25', name: 'Zucchine ripiene di carne', categories: ['Cena'],
+    ingredients: [
+      { name: 'Manzo macinato', grams: 150, nutrition: { calories: 300, protein: 39, carbs: 0, fat: 15 } },
+      { name: 'Zucchine', grams: 300, nutrition: { calories: 48, protein: 3.6, carbs: 7.2, fat: 0.6 } },
+      { name: 'Parmigiano', grams: 20, nutrition: { calories: 83, protein: 7.5, carbs: 0, fat: 5.7 } },
+    ],
+    nutrition: { calories: 431, protein: 50.1, carbs: 7.2, fat: 21.3 },
+  },
+  {
+    id: 'd26', name: 'Branzino al cartoccio con verdure', categories: ['Cena'],
+    ingredients: [
+      { name: 'Branzino', grams: 250, nutrition: { calories: 243, protein: 47.5, carbs: 0, fat: 5 } },
+      { name: 'Verdure', grams: 250, nutrition: { calories: 75, protein: 3.75, carbs: 15, fat: 0.5 } },
+    ],
+    nutrition: { calories: 318, protein: 51.25, carbs: 15, fat: 5.5 },
+  },
+  {
+    id: 'd27', name: 'Pollo arrosto con patate', categories: ['Cena'],
+    ingredients: [
+      { name: 'Coscia di pollo', grams: 250, nutrition: { calories: 413, protein: 47.5, carbs: 0, fat: 23.75 } },
+      { name: 'Patate', grams: 300, nutrition: { calories: 231, protein: 6, carbs: 51, fat: 0.3 } },
+    ],
+    nutrition: { calories: 644, protein: 53.5, carbs: 51, fat: 24.05 },
+  },
+  {
+    id: 'd28', name: 'Spezzatino di manzo', categories: ['Cena'],
+    ingredients: [
+      { name: 'Manzo a pezzi', grams: 200, nutrition: { calories: 400, protein: 52, carbs: 0, fat: 20 } },
+      { name: 'Carote e patate', grams: 200, nutrition: { calories: 100, protein: 2, carbs: 22, fat: 0.2 } },
+    ],
+    nutrition: { calories: 500, protein: 54, carbs: 22, fat: 20.2 },
+  },
+  {
+    id: 'd29', name: 'Filetto di maiale con mele', categories: ['Cena'],
+    ingredients: [
+      { name: 'Filetto di maiale', grams: 200, nutrition: { calories: 484, protein: 54, carbs: 0, fat: 28 } },
+      { name: 'Mele', grams: 150, nutrition: { calories: 78, protein: 0.45, carbs: 20.7, fat: 0.3 } },
+    ],
+    nutrition: { calories: 562, protein: 54.45, carbs: 20.7, fat: 28.3 },
+  },
+  {
+    id: 'd30', name: 'Tacchino con purè di patate', categories: ['Cena'],
+    ingredients: [
+      { name: 'Petto di tacchino', grams: 200, nutrition: { calories: 270, protein: 60, carbs: 0, fat: 2 } },
+      { name: 'Purè di patate', grams: 200, nutrition: { calories: 150, protein: 4, carbs: 30, fat: 3 } },
+    ],
+    nutrition: { calories: 420, protein: 64, carbs: 30, fat: 5 },
   },
 ];
 
