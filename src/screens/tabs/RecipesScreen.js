@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Modal,
   KeyboardAvoidingView, Platform, ActivityIndicator, FlatList,
@@ -8,8 +8,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../../theme';
 import { searchFood, scaleNutrition, sumNutrition } from '../../services/nutritionApi';
 import { useLang } from '../../i18n/LangContext';
+import { loadRecipes, saveRecipes } from '../../services/storage';
 
-const SAMPLE_RECIPES = [
+const DEFAULT_RECIPES = [
   {
     id: '1', name: 'Avena con frutta', categories: ['Colazione'],
     ingredients: [{ name: 'Fiocchi d\'avena', grams: 80, nutrition: { calories: 302, protein: 10.7, carbs: 52, fat: 5.5 } }],
@@ -22,8 +23,15 @@ const EMPTY_FORM = { name: '', categories: [], ingredients: [] };
 export default function RecipesScreen() {
   const insets = useSafeAreaInsets();
   const t = useLang();
-  const [recipes, setRecipes]           = useState(SAMPLE_RECIPES);
+  const [recipes, setRecipes]           = useState(DEFAULT_RECIPES);
   const [activeCategory, setActiveCategory] = useState(t.categories[0]);
+
+  // Carica ricette salvate all'avvio
+  useEffect(() => {
+    loadRecipes().then((saved) => {
+      if (saved && saved.length > 0) setRecipes(saved);
+    });
+  }, []);
   const [search, setSearch]             = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [form, setForm]                 = useState(EMPTY_FORM);
@@ -114,10 +122,10 @@ export default function RecipesScreen() {
   function handleSaveRecipe() {
     if (!validateForm()) return;
     const nutrition = sumNutrition(form.ingredients);
-    setRecipes((prev) => [
-      { id: Date.now().toString(), name: form.name.trim(), categories: form.categories, ingredients: form.ingredients, nutrition },
-      ...prev,
-    ]);
+    const newRecipe = { id: Date.now().toString(), name: form.name.trim(), categories: form.categories, ingredients: form.ingredients, nutrition };
+    const updated = [newRecipe, ...recipes];
+    setRecipes(updated);
+    saveRecipes(updated);
     handleClose();
   }
 
