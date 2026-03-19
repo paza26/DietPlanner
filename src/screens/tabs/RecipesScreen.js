@@ -655,11 +655,7 @@ function RecipeCard({ recipe }) {
           <Text style={styles.recipeCalUnit}>kcal</Text>
         </View>
       </View>
-      <View style={styles.macros}>
-        <MacroBadge label="P" value={recipe.nutrition.protein} color="#3b82f6" />
-        <MacroBadge label="C" value={recipe.nutrition.carbs}   color="#f59e0b" />
-        <MacroBadge label="G" value={recipe.nutrition.fat}     color="#ef4444" />
-      </View>
+      <MacroBar nutrition={recipe.nutrition} />
       {expanded && recipe.ingredients?.length > 0 && (
         <View style={styles.ingredientsList}>
           <Text style={styles.ingredientsTitle}>Ingredienti</Text>
@@ -678,11 +674,43 @@ function RecipeCard({ recipe }) {
   );
 }
 
-function MacroBadge({ label, value, color }) {
+const MACRO_SEGMENTS = [
+  { key: 'protein', color: '#3b82f6', label: 'P' },
+  { key: 'carbs',   color: '#f59e0b', label: 'C' },
+  { key: 'fat',     color: '#ef4444', label: 'G' },
+];
+
+function MacroBar({ nutrition }) {
+  const { protein, carbs, fat } = nutrition;
+  const total = protein + carbs + fat;
+  if (total === 0) return null;
+
+  const values = { protein, carbs, fat };
+
   return (
-    <View style={[styles.macroBadge, { borderColor: color + '33', backgroundColor: color + '11' }]}>
-      <Text style={[styles.macroBadgeLabel, { color }]}>{label}</Text>
-      <Text style={[styles.macroBadgeValue, { color }]}>{value}g</Text>
+    <View style={styles.macroBar}>
+      {MACRO_SEGMENTS.map((seg, i) => {
+        const grams = values[seg.key];
+        const pct = grams / total;
+        const showText = pct > 0.13;
+        const isFirst = i === 0;
+        const isLast = i === MACRO_SEGMENTS.length - 1;
+        return (
+          <View
+            key={seg.key}
+            style={[
+              styles.macroBarSegment,
+              { flex: grams, backgroundColor: seg.color },
+              isFirst && styles.macroBarLeft,
+              isLast && styles.macroBarRight,
+            ]}
+          >
+            {showText && (
+              <Text style={styles.macroBarText}>{seg.label} {grams}g</Text>
+            )}
+          </View>
+        );
+      })}
     </View>
   );
 }
@@ -725,10 +753,11 @@ const styles = StyleSheet.create({
   recipeCalBox: { alignItems: 'flex-end' },
   recipeCalValue: { fontSize: 22, fontWeight: '800', color: THEME.text, letterSpacing: -0.5 },
   recipeCalUnit: { fontSize: 11, color: THEME.textSecondary },
-  macros: { flexDirection: 'row', gap: 6 },
-  macroBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, borderWidth: 1, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4 },
-  macroBadgeLabel: { fontSize: 11, fontWeight: '800' },
-  macroBadgeValue: { fontSize: 12, fontWeight: '600' },
+  macroBar: { flexDirection: 'row', height: 30, borderRadius: 8, overflow: 'hidden', marginTop: 10 },
+  macroBarSegment: { justifyContent: 'center', alignItems: 'center' },
+  macroBarLeft: { borderTopLeftRadius: 8, borderBottomLeftRadius: 8 },
+  macroBarRight: { borderTopRightRadius: 8, borderBottomRightRadius: 8 },
+  macroBarText: { fontSize: 10, fontWeight: '800', color: '#fff', letterSpacing: 0.2 },
   ingredientsList: { marginTop: 14, borderTopWidth: 1, borderTopColor: THEME.border, paddingTop: 12 },
   ingredientsTitle: { fontSize: 11, fontWeight: '700', color: THEME.textSecondary, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 },
   ingredientRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4 },
