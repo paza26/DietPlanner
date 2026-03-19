@@ -41,6 +41,11 @@ export default function App() {
     await saveUserProfile(firebaseUser.uid, data);
   }
 
+  function handleProfileUpdate(updatedData) {
+    setLang(updatedData.lang ?? lang);
+    setUserProfile(updatedData);
+  }
+
   // Spinner iniziale mentre Firebase verifica la sessione
   if (firebaseUser === undefined) {
     return (
@@ -58,7 +63,7 @@ export default function App() {
             ? <AuthScreen />
             : !userProfile
               ? <WelcomeScreen onComplete={handleProfileComplete} />
-              : <MainNavigator user={userProfile} uid={firebaseUser.uid} />}
+              : <MainNavigator user={userProfile} uid={firebaseUser.uid} onProfileUpdate={handleProfileUpdate} />}
         </NavigationContainer>
       </LangContext.Provider>
     </SafeAreaProvider>

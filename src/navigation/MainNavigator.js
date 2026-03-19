@@ -7,10 +7,11 @@ import { useLang } from '../i18n/LangContext';
 import DashboardScreen from '../screens/tabs/DashboardScreen';
 import RecipesScreen from '../screens/tabs/RecipesScreen';
 import PlanScreen from '../screens/tabs/PlanScreen';
+import ProfileScreen from '../screens/tabs/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
-export default function MainNavigator({ user, uid }) {
+export default function MainNavigator({ user, uid, onProfileUpdate }) {
   const t = useLang();
 
   return (
@@ -38,6 +39,7 @@ export default function MainNavigator({ user, uid }) {
             Dashboard: focused ? 'home' : 'home-outline',
             Recipes:   focused ? 'restaurant' : 'restaurant-outline',
             Plan:      focused ? 'calendar' : 'calendar-outline',
+            Profile:   focused ? 'person' : 'person-outline',
           };
           return <Ionicons name={icons[route.name]} size={22} color={color} />;
         },
@@ -50,6 +52,9 @@ export default function MainNavigator({ user, uid }) {
         {() => <RecipesScreen uid={uid} />}
       </Tab.Screen>
       <Tab.Screen name="Plan" options={{ tabBarLabel: t.tabPlan }} component={PlanScreen} />
+      <Tab.Screen name="Profile" options={{ tabBarLabel: 'Profilo' }}>
+        {() => <ProfileScreen user={user} uid={uid} onUpdate={onProfileUpdate} />}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }
