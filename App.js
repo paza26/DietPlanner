@@ -58,7 +58,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <LangContext.Provider value={lang}>
-        <NavigationContainer>
+        <NavigationContainer key={firebaseUser ? firebaseUser.uid : 'logged-out'}>
           {!firebaseUser
             ? <AuthScreen />
             : !userProfile

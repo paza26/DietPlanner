@@ -94,14 +94,20 @@ export default function ProfileScreen({ user, uid, onUpdate }) {
   }
 
   function handleLogout() {
-    Alert.alert(
-      'Logout',
-      'Vuoi davvero uscire dal tuo account?',
-      [
-        { text: 'Annulla', style: 'cancel' },
-        { text: 'Esci', style: 'destructive', onPress: () => signOut(auth) },
-      ]
-    );
+    if (Platform.OS === 'web') {
+      if (window.confirm('Vuoi davvero uscire dal tuo account?')) {
+        signOut(auth);
+      }
+    } else {
+      Alert.alert(
+        'Logout',
+        'Vuoi davvero uscire dal tuo account?',
+        [
+          { text: 'Annulla', style: 'cancel' },
+          { text: 'Esci', style: 'destructive', onPress: () => signOut(auth) },
+        ]
+      );
+    }
   }
 
   return (
