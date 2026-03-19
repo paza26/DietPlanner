@@ -1,10 +1,8 @@
 import { initializeApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { getAuth, initializeAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
-// ⚠️ Sostituisci questi valori con quelli del tuo progetto Firebase
-// Li trovi su: Firebase Console → Il tuo progetto → Impostazioni → Le tue app
 const firebaseConfig = {
   apiKey: "AIzaSyDnsD_qplMRsIj7IdhHaSL6zdpOFLWfSiM",
   authDomain: "dietplanner-e46f6.firebaseapp.com",
@@ -15,13 +13,19 @@ const firebaseConfig = {
   measurementId: "G-KLQEZ6DPJ5"
 };
 
-
 const app = initializeApp(firebaseConfig);
 
-// Auth con persistenza locale (l'utente rimane loggato dopo chiusura app)
-export const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage),
-});
+// Su web usa getAuth (localStorage), su native usa AsyncStorage per la persistenza
+let auth;
+if (Platform.OS === 'web') {
+  auth = getAuth(app);
+} else {
+  const { getReactNativePersistence } = require('firebase/auth');
+  const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage),
+  });
+}
 
-// Firestore DB
+export { auth };
 export const db = getFirestore(app);

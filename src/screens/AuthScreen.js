@@ -1,21 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
   ScrollView, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { Ionicons } from '@expo/vector-icons';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
 import { auth } from '../services/firebase';
 import { THEME } from '../theme';
 
+// Necessario per completare il flusso OAuth su web
+WebBrowser.maybeCompleteAuthSession();
+
+// ⚠️ Inserisci il tuo Web Client ID
+// Lo trovi su: Firebase Console → Authentication → Sign-in method → Google → Web SDK configuration
+const GOOGLE_WEB_CLIENT_ID = '408433800561-poe5u8642p3tjdqpp5kcdr4lh3evdvlg.apps.googleusercontent.com';
+
 const ERROR_MESSAGES = {
-  'auth/user-not-found':       'Nessun account trovato con questa email.',
-  'auth/wrong-password':       'Password errata.',
-  'auth/invalid-credential':   'Email o password non corretti.',
-  'auth/email-already-in-use': 'Questa email è già registrata.',
-  'auth/invalid-email':        'Indirizzo email non valido.',
-  'auth/weak-password':        'La password deve essere di almeno 6 caratteri.',
-  'auth/network-request-failed': 'Errore di rete. Controlla la connessione.',
+  'auth/user-not-found':        'Nessun account trovato con questa email.',
+  'auth/wrong-password':        'Password errata.',
+  'auth/invalid-credential':    'Email o password non corretti.',
+  'auth/email-already-in-use':  'Questa email è già registrata.',
+  'auth/invalid-email':         'Indirizzo email non valido.',
+  'auth/weak-password':         'La password deve essere di almeno 6 caratteri.',
+  'auth/network-request-failed':'Errore di rete. Controlla la connessione.',
+  'auth/cancelled':             'Accesso con Google annullato.',
 };
 
 function getErrorMessage(code) {
@@ -23,11 +34,30 @@ function getErrorMessage(code) {
 }
 
 export default function AuthScreen() {
-  const [mode, setMode]       = useState('login'); // 'login' | 'register'
-  const [email, setEmail]     = useState('');
+  const [mode, setMode]         = useState('login'); // 'login' | 'register'
+  const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError]     = useState('');
-  const [loading, setLoading] = useState(false);
+  const [error, setError]       = useState('');
+  const [loading, setLoading]   = useState(false);
+
+  // Hook Google OAuth
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId: GOOGLE_WEB_CLIENT_ID,
+  });
+
+  // Gestisce la risposta del flusso Google OAuth
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const { id_token } = response.params;
+      const credential = GoogleAuthProvider.credential(id_token);
+      setLoading(true);
+      signInWithCredential(auth, credential)
+        .catch((e) => setError(getErrorMessage(e.code)))
+        .finally(() => setLoading(false));
+    } else if (response?.type === 'error') {
+      setError('Accesso con Google fallito. Riprova.');
+    }
+  }, [response]);
 
   async function handleSubmit() {
     setError('');
@@ -50,6 +80,11 @@ export default function AuthScreen() {
     }
   }
 
+  async function handleGoogleSignIn() {
+    setError('');
+    await promptAsync();
+  }
+
   const isLogin = mode === 'login';
 
   return (
@@ -66,7 +101,7 @@ export default function AuthScreen() {
           <Text style={styles.subtitle}>Il tuo piano alimentare personale</Text>
         </View>
 
-        {/* Card */}
+        {/* Card email/password */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>{isLogin ? 'Accedi' : 'Crea account'}</Text>
           <Text style={styles.cardSub}>
@@ -112,9 +147,27 @@ export default function AuthScreen() {
               ? <ActivityIndicator color="#fff" />
               : <Text style={styles.submitButtonText}>{isLogin ? 'Accedi' : 'Registrati'}</Text>}
           </TouchableOpacity>
+
+          {/* Separatore */}
+          <View style={styles.dividerRow}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>oppure</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          {/* Bottone Google */}
+          <TouchableOpacity
+            style={[styles.googleButton, (!request || loading) && { opacity: 0.6 }]}
+            onPress={handleGoogleSignIn}
+            activeOpacity={0.85}
+            disabled={!request || loading}
+          >
+            <Ionicons name="logo-google" size={18} color="#EA4335" />
+            <Text style={styles.googleButtonText}>Continua con Google</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Toggle mode */}
+        {/* Toggle modalità login/registra */}
         <View style={styles.toggleRow}>
           <Text style={styles.toggleText}>
             {isLogin ? 'Non hai un account? ' : 'Hai già un account? '}
@@ -221,6 +274,43 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '800',
     letterSpacing: 0.4,
+  },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+    gap: 10,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: THEME.border,
+  },
+  dividerText: {
+    fontSize: 12,
+    color: THEME.textSecondary,
+    fontWeight: '600',
+  },
+  googleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    backgroundColor: THEME.card,
+    borderWidth: 1.5,
+    borderColor: THEME.border,
+    borderRadius: 14,
+    paddingVertical: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  googleButtonText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: THEME.text,
   },
   toggleRow: {
     flexDirection: 'row',
