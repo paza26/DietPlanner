@@ -10,7 +10,7 @@ import PlanScreen from '../screens/tabs/PlanScreen';
 
 const Tab = createBottomTabNavigator();
 
-export default function MainNavigator({ user }) {
+export default function MainNavigator({ user, uid }) {
   const t = useLang();
 
   return (
@@ -46,7 +46,9 @@ export default function MainNavigator({ user }) {
       <Tab.Screen name="Dashboard" options={{ tabBarLabel: t.tabDashboard }}>
         {() => <DashboardScreen user={user} />}
       </Tab.Screen>
-      <Tab.Screen name="Recipes" options={{ tabBarLabel: t.tabRecipes }} component={RecipesScreen} />
+      <Tab.Screen name="Recipes" options={{ tabBarLabel: t.tabRecipes }}>
+        {() => <RecipesScreen uid={uid} />}
+      </Tab.Screen>
       <Tab.Screen name="Plan" options={{ tabBarLabel: t.tabPlan }} component={PlanScreen} />
     </Tab.Navigator>
   );

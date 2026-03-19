@@ -8,7 +8,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../../theme';
 import { searchFood, scaleNutrition, sumNutrition } from '../../services/nutritionApi';
 import { useLang } from '../../i18n/LangContext';
-import { loadRecipes, saveRecipes, getRecipesVersion, saveRecipesVersion, RECIPES_VERSION } from '../../services/storage';
+import { loadRecipesFromCloud, saveRecipesToCloud } from '../../services/firestore';
+import { RECIPES_VERSION } from '../../services/storage';
 
 const DEFAULT_RECIPES = [
   {
@@ -263,24 +264,23 @@ const DEFAULT_RECIPES = [
 
 const EMPTY_FORM = { name: '', categories: [], ingredients: [] };
 
-export default function RecipesScreen() {
+export default function RecipesScreen({ uid }) {
   const insets = useSafeAreaInsets();
   const t = useLang();
   const [recipes, setRecipes]           = useState(DEFAULT_RECIPES);
   const [activeCategory, setActiveCategory] = useState(t.categories[0]);
 
-  // Carica ricette salvate all'avvio; se la versione è obsoleta, ripristina le default
+  // Carica ricette dal cloud all'avvio; se assenti o versione obsoleta, usa le default
   useEffect(() => {
-    Promise.all([loadRecipes(), getRecipesVersion()]).then(([saved, savedVersion]) => {
+    loadRecipesFromCloud(uid).then(({ recipes: saved, version: savedVersion }) => {
       if (saved && saved.length > 0 && savedVersion >= RECIPES_VERSION) {
         setRecipes(saved);
       } else {
         setRecipes(DEFAULT_RECIPES);
-        saveRecipes(DEFAULT_RECIPES);
-        saveRecipesVersion(RECIPES_VERSION);
+        saveRecipesToCloud(uid, DEFAULT_RECIPES, RECIPES_VERSION);
       }
     });
-  }, []);
+  }, [uid]);
   const [search, setSearch]             = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [form, setForm]                 = useState(EMPTY_FORM);
@@ -374,7 +374,7 @@ export default function RecipesScreen() {
     const newRecipe = { id: Date.now().toString(), name: form.name.trim(), categories: form.categories, ingredients: form.ingredients, nutrition };
     const updated = [newRecipe, ...recipes];
     setRecipes(updated);
-    saveRecipes(updated);
+    saveRecipesToCloud(uid, updated, RECIPES_VERSION);
     handleClose();
   }
 
